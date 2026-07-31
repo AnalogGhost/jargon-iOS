@@ -7,6 +7,7 @@ Paste these directly into the matching App Store Connect fields under App Inform
 - `promotional_text.txt` → Promotional Text (170 char limit, editable without a new review)
 - `keywords.txt` → Keywords (100 char limit, comma-separated)
 - `description.txt` → Description (4000 char limit)
+- `beta_app_description.txt` → TestFlight → Test Information → Beta App Description (4000 char limit, shown to external testers)
 
 ## Category
 
