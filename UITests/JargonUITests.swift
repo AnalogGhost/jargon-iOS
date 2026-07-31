@@ -20,6 +20,27 @@ final class JargonUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["0"].waitForExistence(timeout: 5))
     }
 
+    func testClearSearchButtonResetsList() {
+        let app = launchedApp()
+        let search = app.textFields["Search"]
+        XCTAssertTrue(search.waitForExistence(timeout: 10))
+
+        // No clear button until there's text to clear.
+        XCTAssertFalse(app.buttons["Clear search"].exists)
+
+        search.tap()
+        search.typeText("hacker")
+        let clearButton = app.buttons["Clear search"]
+        XCTAssertTrue(clearButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["hacker"].waitForExistence(timeout: 5))
+
+        clearButton.tap()
+        // Back to the unfiltered list -- "0" (the first bundled entry) is visible again.
+        XCTAssertTrue(app.staticTexts["0"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Clear search"].exists)
+        XCTAssertEqual(search.value as? String, "Search")
+    }
+
     func testSearchNarrowsResultsAndOpensDetail() {
         let app = launchedApp()
         let search = app.textFields["Search"]
