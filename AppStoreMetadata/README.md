@@ -12,6 +12,12 @@ Paste these directly into the matching App Store Connect fields under App Inform
 
 Not stored in this repo (picked directly in App Store Connect, same as Android's Play category isn't stored here either). Recommended: **Reference** as the primary category.
 
+## Privacy Policy URL
+
+Link directly to the GitHub-rendered `privacy-policy.md` file in this repo — no separate hosting needed:
+
+`https://github.com/AnalogGhost/jargon-iOS/blob/main/privacy-policy.md`
+
 ## Screenshots
 
 Not yet captured. Apple only strictly requires the largest device per family: 6.9" iPhone (1320×2868 px), plus 13" iPad (2064×2752 px) since this app supports iPad. Suggested shot list, mirroring Android's `fastlane/metadata/android/*/images/phoneScreenshots/`:
