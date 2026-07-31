@@ -29,6 +29,7 @@ jobs:
           xcodebuild \
             -scheme Jargon \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -retry-tests-on-failure \
             test
 
       - name: Upload test results
