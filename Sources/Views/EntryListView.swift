@@ -74,10 +74,24 @@ private struct EntryListBody: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            TextField("Search", text: $viewModel.searchQuery)
-                .textFieldStyle(.roundedBorder)
-                .padding(.horizontal)
-                .padding(.vertical, 8)
+            ZStack(alignment: .trailing) {
+                TextField("Search", text: $viewModel.searchQuery)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.trailing, viewModel.searchQuery.isEmpty ? 0 : 24)
+
+                if !viewModel.searchQuery.isEmpty {
+                    Button {
+                        viewModel.searchQuery = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.trailing, 8)
+                    .accessibilityLabel("Clear search")
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
 
             if viewModel.visibleEntries.isEmpty {
                 Spacer()
@@ -108,6 +122,17 @@ private struct EntryListWithScrubber: View {
                         .contentShape(Rectangle())
                         .onTapGesture { onEntryTap(entry) }
                         .id(entry.id)
+                }
+                .onChange(of: entries) { _, newEntries in
+                    // List preserves its old scroll anchor across data changes -- without this,
+                    // clearing or changing the search query leaves the list scrolled wherever
+                    // the previous filtered results happened to land, instead of back at the top.
+                    // Deferred a tick: calling scrollTo synchronously here races the List's
+                    // internal diffable data source update and gets silently dropped.
+                    guard let firstId = newEntries.first?.id else { return }
+                    DispatchQueue.main.async {
+                        proxy.scrollTo(firstId, anchor: .top)
+                    }
                 }
                 .listStyle(.plain)
 

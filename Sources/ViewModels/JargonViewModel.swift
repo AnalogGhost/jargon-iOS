@@ -31,7 +31,11 @@ final class JargonViewModel: ObservableObject {
             .store(in: &cancellables)
 
         $searchQuery
-            .sink { [weak self] _ in self?.recomputeVisibleEntries() }
+            // `$searchQuery` (like all @Published projected publishers) emits on willSet,
+            // before `searchQuery` itself is actually updated -- so the closure must use the
+            // emitted value directly rather than re-reading `self.searchQuery`, which would
+            // still hold the *previous* value at this point.
+            .sink { [weak self] newQuery in self?.recomputeVisibleEntries(query: newQuery) }
             .store(in: &cancellables)
 
         loadEntries()
@@ -74,8 +78,8 @@ final class JargonViewModel: ObservableObject {
         entries.randomElement()
     }
 
-    private func recomputeVisibleEntries() {
-        let filtered = filterByQuery(entries, query: searchQuery)
+    private func recomputeVisibleEntries(query: String? = nil) {
+        let filtered = filterByQuery(entries, query: query ?? searchQuery)
         visibleEntries = filterFavorites(filtered, favoriteIds: favoriteIds, showFavoritesOnly: showFavoritesOnly)
     }
 }
