@@ -1,0 +1,20 @@
+Jargon is a fully offline reader for the Jargon File — the hacker culture dictionary that gave the word "hacker" its original meaning. This is the first iOS build of the app, ported from an existing Android release, and your feedback as a tester is what will shape it before public launch.
+
+What to try:
+• Browse the full list and use the A-Z scrubber on the right edge to jump around
+• Search by term or definition (try "magic" or "bug")
+• Tap any underlined cross-referenced term inside a definition to jump straight to it
+• Favorite a few entries with the star icon, then filter the list down to just your favorites
+• Use the shuffle icon for a random entry
+• Check the About screen for licensing/attribution info
+
+What we'd love feedback on:
+• Anything that looks wrong on your specific device size (iPhone or iPad)
+• Dark mode appearance
+• VoiceOver/accessibility if you use it
+• Any crash, freeze, or entry that fails to load
+• General feel of the search and cross-reference navigation
+
+The app requests zero permissions and makes zero network requests — the dictionary (2,300+ entries) ships entirely inside the app, and favorites are stored only on your device.
+
+Found a bug or have thoughts? Email jargon@hackerapps.com — every report helps before this goes out to everyone.
