@@ -1,0 +1,36 @@
+# fastlane snapshot configuration — App Store screenshots.
+# Run with: bundle exec fastlane screenshots
+
+# Jargon is a universal app (TARGETED_DEVICE_FAMILY "1,2"). Apple requires the
+# largest display per family: 6.9" iPhone (1320x2868) and 13" iPad (2064x2752).
+devices([
+  "iPhone 16 Pro Max",
+  "iPad Pro 13-inch (M5)"
+])
+
+# English only for now — add a locale here when a translated
+# fastlane/metadata/<locale> set and screenshot_captions.yml rows exist.
+languages([
+  "en-US"
+])
+
+scheme("JargonUITests")
+
+# Raw captures. The `screenshots` lane then composites the framed/captioned
+# marketing set into ./fastlane/screenshots/framed, which is what deliver uploads.
+output_directory("./fastlane/screenshots/raw")
+clear_previous_screenshots(true)
+
+# Serial capture — one simulator at a time. Concurrent booting of multiple large
+# simulators starves a loaded machine and the UI queries time out.
+concurrent_simulators(false)
+
+# Clean 9:41 / full-battery / full-signal status bar on every shot.
+override_status_bar(true)
+
+# Keep going if one device flakes (slow simulator boot); retry it twice.
+stop_after_first_error(false)
+number_of_retries(2)
+
+# The screenshot walkthrough is the only test we want captured.
+only_testing(["JargonUITests/ScreenshotCapture"])
