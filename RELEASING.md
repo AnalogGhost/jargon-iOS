@@ -52,9 +52,15 @@ The app already exists on the App Store (`com.hackerapps.jargon`, Apple ID
 `6796777990`); version 1.0 shipped in August 2026. This pipeline was added
 afterwards, so the first fastlane run is an **update**, not a first submission —
 `MARKETING_VERSION` must be greater than the live version, and the `metadata`
-tree overwrites the live listing text. Run `bundle exec fastlane deliver
-download_metadata` once the API key is set up to diff the repo against what is
-live before pushing anything.
+tree overwrites the live listing text.
+
+Run `bundle exec fastlane download_metadata` any time to pull the live listing
+into `fastlane/metadata/` so `git diff` shows exactly what a push would change
+(it never uploads). It overwrites `description.txt`, `release_notes.txt`,
+`review_information/notes.txt` etc. with the live copy — `git checkout` the ones
+you mean to keep afterwards. It was already run once during setup; the diff
+found the live `privacy_url` still pointing at the c2k repo (fixed in this repo,
+will correct on the next metadata push).
 
 ## Cutting a release
 
