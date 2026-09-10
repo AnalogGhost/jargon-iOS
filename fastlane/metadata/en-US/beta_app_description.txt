@@ -1,4 +1,4 @@
-Jargon is a fully offline reader for the Jargon File — the hacker culture dictionary that gave the word "hacker" its original meaning. This is the first iOS build of the app, ported from an existing Android release, and your feedback as a tester is what will shape it before public launch.
+Jargon is a fully offline reader for the Jargon File — the hacker culture dictionary that gave the word "hacker" its original meaning. This build adds Share/Copy on the entry screen, remembered recent searches, and a "Random entry" Home Screen quick action; your feedback as a tester helps shape it before the update ships.
 
 What to try:
 • Browse the full list and use the A-Z scrubber on the right edge to jump around

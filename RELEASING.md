@@ -48,9 +48,13 @@ This mirrors the Android app (`~/Projects/jargon`).
    the full review-notes draft are in `fastlane/recording_script.md` and
    `fastlane/review_notes.md`.
 
-5. **First release only** — if the app record does not exist in App Store Connect
-   yet, create it there (or with `fastlane produce`) before the first `store`
-   run. `latest_testflight_build_number` falls back to `initial_build_number: 0`.
+The app already exists on the App Store (`com.hackerapps.jargon`, Apple ID
+`6796777990`); version 1.0 shipped in August 2026. This pipeline was added
+afterwards, so the first fastlane run is an **update**, not a first submission —
+`MARKETING_VERSION` must be greater than the live version, and the `metadata`
+tree overwrites the live listing text. Run `bundle exec fastlane deliver
+download_metadata` once the API key is set up to diff the repo against what is
+live before pushing anything.
 
 ## Cutting a release
 
