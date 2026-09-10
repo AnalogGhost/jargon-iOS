@@ -1,7 +1,4 @@
-Initial release.
-
-* Browse and search 2,300+ Jargon File entries, fully offline
-* Tappable cross-references between entries
-* Share or copy any definition; recent searches remembered
-* Random entry (with a Home Screen quick action), favorites, alphabet fast-scroll
-* About screen with licensing and attribution
+* Share or copy any definition from the entry screen
+* Search now remembers your recent lookups
+* "Random entry" Home Screen quick action — long-press the app icon
+* Smoother search while you type

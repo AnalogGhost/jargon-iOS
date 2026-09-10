@@ -34,8 +34,8 @@ translation exists.
 ## Category
 
 Not stored here (picked directly in App Store Connect, same as the Android
-app's Play category isn't stored in its repo). Recommended primary
-category: **Reference**.
+app's Play category isn't stored in its repo). The live listing is under
+**Education**.
 
 ## Review contact details
 
