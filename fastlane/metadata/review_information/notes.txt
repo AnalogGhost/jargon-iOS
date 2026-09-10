@@ -1,0 +1,30 @@
+1. Screen recording
+
+Screen recording attached. It shows: app launch, browsing the alphabetical entry list, searching, opening an entry and following a cross-referenced term to another entry, favoriting an entry and viewing the Favorites list, and using Surprise Me to jump to a random entry. The app has no account registration, login, purchases/subscriptions, user-generated content, or sensitive-data/device-capability prompts, so those are not applicable.
+
+2. Devices and OS versions tested
+
+iPhone 17, iOS 26.6
+iPad mini (6th generation), iPadOS 26.6
+
+3. App description and target audience
+
+Jargon is a fully offline reader for the Jargon File - a long-running hacker-culture dictionary/glossary (compiled by Eric S. Raymond and Guy L. Steele, continued today as a community project) that documents the vocabulary, slang, and folklore of software/hacker culture, including the original meaning of the word "hacker" itself.
+
+Target audience: programmers, computer science students, and anyone interested in hacker/computing culture and its history and terminology. The app solves the problem of the Jargon File's canonical text being scattered across old web mirrors of varying quality - it packages the full community edition into a fast, searchable, cross-referenced, offline-first reading experience with no ads or friction.
+
+4. Setup and access instructions
+
+No login, account, or sample data is required. The app has no account system at all. On first launch, the user is shown the full alphabetical entry list immediately - all 2,300+ entries and all features (search, cross-reference navigation, favorites, random entry) are available with no setup step.
+
+5. External services used
+
+None. The app makes no network requests whatsoever and integrates no third-party SDKs, analytics, crash reporting, or ad networks. The entire dictionary (2,300+ entries) ships bundled inside the app binary as local data; nothing is fetched remotely, ever. Favorited entries are stored locally on-device only. This is documented in the app's Privacy Policy and reflected in its Privacy Manifest (no tracking, no collected data types).
+
+6. Regional differences
+
+The app functions identically in every region - there is no server-side content, no region locking, and no pricing/purchases of any kind.
+
+7. Regulated industry / protected third-party material
+
+The app is not in a regulated industry, but it does bundle third-party content: the dictionary text is the Jargon File community edition, licensed under CC BY-SA 4.0 (github.com/agiacalone/jargonfile). This is a permissive license that explicitly allows redistribution and adaptation, including in apps, with attribution - which is given both in-app and in the App Store description ("Dictionary content is CC BY-SA 4.0 from the Jargon File community edition"). Happy to provide the license text or a link to the source repository directly if useful for verification.
