@@ -24,10 +24,15 @@ fastlane/.env.default
 fastlane/.env.local
 fastlane/report.xml
 fastlane/Preview.html
+fastlane/README.md
 fastlane/test_output/
 fastlane/screenshots/**/*.html
 .bundle/
 vendor/bundle/
+# App Review contact details are set once in App Store Connect, never versioned.
+# `deliver download_metadata` writes these; keep only notes.txt.
+fastlane/metadata/review_information/*
+!fastlane/metadata/review_information/notes.txt
 
 # App Store Connect API keys — never commit
 *.p8

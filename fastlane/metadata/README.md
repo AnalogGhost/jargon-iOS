@@ -33,9 +33,10 @@ translation exists.
 
 ## Category
 
-Not stored here (picked directly in App Store Connect, same as the Android
-app's Play category isn't stored in its repo). The live listing is under
-**Education**.
+`primary_category.txt` / `secondary_category.txt` hold the live values —
+**Education** primary, **Reference** secondary. They match App Store Connect,
+so pushing them is a no-op; they're versioned so a change is deliberate and
+reviewable.
 
 ## Review contact details
 
