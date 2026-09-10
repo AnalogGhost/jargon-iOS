@@ -72,12 +72,21 @@ private struct EntryListBody: View {
     @ObservedObject var viewModel: JargonViewModel
     let onEntryTap: (DictionaryEntry) -> Void
 
+    @FocusState private var searchFieldFocused: Bool
+
+    private var showsRecentSearches: Bool {
+        searchFieldFocused && viewModel.searchQuery.isEmpty && !viewModel.recentSearches.isEmpty
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .trailing) {
                 TextField("Search", text: $viewModel.searchQuery)
                     .textFieldStyle(.roundedBorder)
                     .padding(.trailing, viewModel.searchQuery.isEmpty ? 0 : 24)
+                    .focused($searchFieldFocused)
+                    .submitLabel(.search)
+                    .onSubmit { viewModel.commitSearch() }
 
                 if !viewModel.searchQuery.isEmpty {
                     Button {
@@ -93,6 +102,17 @@ private struct EntryListBody: View {
             .padding(.horizontal)
             .padding(.vertical, 8)
 
+            if showsRecentSearches {
+                RecentSearchesRow(
+                    searches: viewModel.recentSearches,
+                    onSelect: { query in
+                        viewModel.selectRecentSearch(query)
+                        searchFieldFocused = false
+                    },
+                    onClear: { viewModel.clearSearchHistory() }
+                )
+            }
+
             if viewModel.visibleEntries.isEmpty {
                 Spacer()
                 Text(viewModel.showFavoritesOnly ? "No favorites yet" : "No entries found")
@@ -106,6 +126,46 @@ private struct EntryListBody: View {
                 )
             }
         }
+    }
+}
+
+private struct RecentSearchesRow: View {
+    let searches: [String]
+    let onSelect: (String) -> Void
+    let onClear: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text("Recent")
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Clear", action: onClear)
+                    .font(.footnote)
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(searches, id: \.self) { query in
+                        Button {
+                            onSelect(query)
+                        } label: {
+                            Text(query)
+                                .font(.subheadline)
+                                .lineLimit(1)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.secondary.opacity(0.15), in: Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Recent search: \(query)")
+                    }
+                }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 8)
     }
 }
 
