@@ -5,10 +5,11 @@ A fully offline reader for the Jargon File — the hacker culture dictionary tha
 ## Features
 
 - Browse 2,300+ entries alphabetically, with a fast-scroll index
-- Instant search across terms and definitions
+- Instant search across terms and definitions, with recent lookups remembered
 - Tap any cross-referenced term to jump straight to it
+- Share or copy any definition
 - Favorite entries and filter down to just those
-- "Surprise me" with a random entry
+- "Surprise me" with a random entry, or a "Random entry" Home Screen quick action
 - Zero permissions, zero network access — the dictionary ships inside the app; nothing ever leaves the device
 
 ## Requirements

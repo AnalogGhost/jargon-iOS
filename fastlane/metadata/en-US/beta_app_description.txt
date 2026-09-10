@@ -2,10 +2,11 @@ Jargon is a fully offline reader for the Jargon File — the hacker culture dict
 
 What to try:
 • Browse the full list and use the A-Z scrubber on the right edge to jump around
-• Search by term or definition (try "magic" or "bug")
+• Search by term or definition (try "magic" or "bug"); submit a search, then tap the field again to see your recent lookups
 • Tap any underlined cross-referenced term inside a definition to jump straight to it
+• Share or copy a definition from the entry screen
 • Favorite a few entries with the star icon, then filter the list down to just your favorites
-• Use the shuffle icon for a random entry
+• Use the shuffle icon for a random entry — or long-press the app icon on the Home Screen
 • Check the About screen for licensing/attribution info
 
 What we'd love feedback on:

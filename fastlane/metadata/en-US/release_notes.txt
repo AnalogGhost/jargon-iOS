@@ -2,5 +2,6 @@ Initial release.
 
 * Browse and search 2,300+ Jargon File entries, fully offline
 * Tappable cross-references between entries
-* Random entry, favorites, alphabet fast-scroll
+* Share or copy any definition; recent searches remembered
+* Random entry (with a Home Screen quick action), favorites, alphabet fast-scroll
 * About screen with licensing and attribution
