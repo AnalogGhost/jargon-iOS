@@ -1,0 +1,41 @@
+name: Screenshots
+
+# Manual only. Captures the raw screenshots (6.9" iPhone + 13" iPad),
+# composites the framed/captioned marketing set, and uploads both as an
+# artifact; download it and commit the PNGs under fastlane/screenshots/.
+# CI never commits them (mirrors the Android app's screenshots workflow).
+on:
+  workflow_dispatch:
+
+jobs:
+  screenshots:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Capture and frame screenshots
+        run: bundle exec fastlane screenshots
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: fastlane/screenshots/**/*.png
+          if-no-files-found: error
