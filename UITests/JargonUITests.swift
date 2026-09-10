@@ -110,6 +110,15 @@ final class JargonUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars.element(matching: leftList).waitForExistence(timeout: 5))
     }
 
+    func testRandomEntryQuickActionOpensAnEntry() {
+        let app = XCUIApplication()
+        app.launchArguments += ["--simulate-random-entry-shortcut"]
+        app.launch()
+        // Should land directly on some entry's detail, not the list.
+        let leftList = NSPredicate(format: "identifier != %@", "Jargon")
+        XCTAssertTrue(app.navigationBars.element(matching: leftList).waitForExistence(timeout: 10))
+    }
+
     func testTappingCrossReferenceNavigatesToTargetEntry() {
         let app = launchedApp()
         let search = app.textFields["Search"]
