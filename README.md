@@ -13,7 +13,7 @@ A fully offline reader for the Jargon File — the hacker culture dictionary tha
 
 ## Requirements
 
-- Xcode 15+
+- Xcode 16+
 - iOS 17+ device or simulator
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) to generate the Xcode project
 
@@ -26,6 +26,10 @@ open Jargon.xcodeproj
 ```
 
 Set your development team in Xcode under Signing & Capabilities, then build and run.
+
+## Releasing
+
+App Store releases are cut locally with fastlane. See [RELEASING.md](RELEASING.md).
 
 ## License
 
