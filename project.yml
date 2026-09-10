@@ -34,6 +34,11 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         ITSAppUsesNonExemptEncryption: false
+        # Home Screen quick action — long-press the app icon (see QuickActions.swift).
+        UIApplicationShortcutItems:
+          - UIApplicationShortcutItemType: com.hackerapps.jargon.random-entry
+            UIApplicationShortcutItemTitle: Random entry
+            UIApplicationShortcutItemIconSymbolName: shuffle
     settings:
       base:
         PRODUCT_NAME: Jargon
@@ -52,6 +57,8 @@ targets:
       configs:
         Debug:
           SWIFT_ENABLE_TESTABILITY: YES
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+          GCC_PREPROCESSOR_DEFINITIONS: "DEBUG=1 $(inherited)"
 
   JargonTests:
     type: bundle.unit-test

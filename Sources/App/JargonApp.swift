@@ -7,7 +7,9 @@ enum Route: Hashable {
 
 @main
 struct JargonApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var viewModel: JargonViewModel
+    @StateObject private var quickActions = QuickActions.shared
     @State private var path: [Route] = []
     @State private var pendingSearchTerm: String?
 
@@ -61,7 +63,23 @@ struct JargonApp: App {
                 handleTermTap(term)
                 return .handled
             })
+            .onAppear { consumePendingRandomEntry() }
+            .onChange(of: quickActions.pendingRandomEntry) { _, pending in
+                if pending { consumePendingRandomEntry() }
+            }
+            .onChange(of: viewModel.entries.isEmpty) { _, isEmpty in
+                if !isEmpty { consumePendingRandomEntry() }
+            }
         }
+    }
+
+    /// Navigates straight to a random entry when the "Random entry" quick action
+    /// is pending and the dictionary has finished loading.
+    private func consumePendingRandomEntry() {
+        guard quickActions.pendingRandomEntry, !viewModel.entries.isEmpty else { return }
+        guard let target = viewModel.randomEntry() else { return }
+        quickActions.pendingRandomEntry = false
+        path = [.detail(target.id)]
     }
 
     private func handleTermTap(_ term: String) {
