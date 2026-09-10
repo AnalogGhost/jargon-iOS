@@ -30,12 +30,21 @@ final class JargonViewModel: ObservableObject {
             }
             .store(in: &cancellables)
 
-        $searchQuery
-            // `$searchQuery` (like all @Published projected publishers) emits on willSet,
-            // before `searchQuery` itself is actually updated -- so the closure must use the
-            // emitted value directly rather than re-reading `self.searchQuery`, which would
-            // still hold the *previous* value at this point.
-            .sink { [weak self] newQuery in self?.recomputeVisibleEntries(query: newQuery) }
+        // Local search over ~2,300 entries is fast, but re-running it on every keystroke still
+        // churns the list; wait for a short typing pause first. Clearing the field (empty query)
+        // applies immediately so the full list comes back without a lag.
+        //
+        // `$searchQuery` (like all @Published projected publishers) emits on willSet, before
+        // `searchQuery` itself is actually updated -- so the closures below must use the emitted
+        // value directly rather than re-reading `self.searchQuery`, which would still hold the
+        // *previous* value at this point.
+        let clears = $searchQuery.filter { $0.isEmpty }
+        let typing = $searchQuery
+            .filter { !$0.isEmpty }
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+        clears
+            .merge(with: typing)
+            .sink { [weak self] query in self?.recomputeVisibleEntries(query: query) }
             .store(in: &cancellables)
 
         loadEntries()
