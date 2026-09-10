@@ -1,0 +1,18 @@
+# Captions burned into the framed App Store screenshots by
+# `swift run --package-path Tools/ScreenshotComposer screenshot-composer`
+# (the `screenshots` / `reframe` lanes). Keyed by screenshot name (the argument
+# to snapshot() in UITests/ScreenshotCapture.swift), then by locale. en-US only
+# for now — add a locale row when a translated fastlane/metadata/<locale> set
+# exists. Re-run the composer after any edit.
+01_browse:
+  en-US: "Over 2,300 entries, fully offline"
+02_search:
+  en-US: "Instant search across every definition"
+03_detail:
+  en-US: "Tap any cross-reference to jump"
+04_favorite:
+  en-US: "Keep your favorites one tap away"
+05_favorites:
+  en-US: "Filter down to just your favorites"
+06_about:
+  en-US: "No ads. No tracking. No network."

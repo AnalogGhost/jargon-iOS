@@ -7,9 +7,27 @@ enum Route: Hashable {
 
 @main
 struct JargonApp: App {
-    @StateObject private var viewModel = JargonViewModel()
+    @StateObject private var viewModel: JargonViewModel
     @State private var path: [Route] = []
     @State private var pendingSearchTerm: String?
+
+    init() {
+        _viewModel = StateObject(wrappedValue: JargonApp.makeViewModel())
+    }
+
+    /// `--screenshot-seed` (passed by the `fastlane snapshot` walkthrough) starts
+    /// the app from a deterministic state — a fixed pair of favorites — so the
+    /// favorites screenshots don't depend on whatever a previous run left behind.
+    private static func makeViewModel() -> JargonViewModel {
+        guard ProcessInfo.processInfo.arguments.contains("--screenshot-seed") else {
+            return JargonViewModel()
+        }
+        let suite = "screenshot-seed"
+        let defaults = UserDefaults(suiteName: suite) ?? .standard
+        defaults.removePersistentDomain(forName: suite)
+        defaults.set(["hacker", "geek"], forKey: "favorite_ids")
+        return JargonViewModel(favoritesRepository: FavoritesRepository(defaults: defaults))
+    }
 
     var body: some Scene {
         WindowGroup {
