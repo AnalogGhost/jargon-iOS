@@ -1,9 +1,12 @@
 import SwiftUI
+import UIKit
 
 struct EntryDetailView: View {
     @ObservedObject var viewModel: JargonViewModel
     let entry: DictionaryEntry
     let onTermTap: (String) -> Void
+
+    @State private var showCopiedConfirmation = false
 
     private var isFavorite: Bool {
         viewModel.favoriteIds.contains(entry.id)
@@ -51,12 +54,42 @@ struct EntryDetailView: View {
         })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
+                ShareLink(item: entry.shareText) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Share")
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    UIPasteboard.general.string = entry.shareText
+                    withAnimation { showCopiedConfirmation = true }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
+                        withAnimation { showCopiedConfirmation = false }
+                    }
+                } label: {
+                    Image(systemName: "doc.on.doc")
+                }
+                .accessibilityLabel("Copy")
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     viewModel.toggleFavorite(entry.id)
                 } label: {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                 }
                 .accessibilityLabel(isFavorite ? "Remove from favorites" : "Add to favorites")
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if showCopiedConfirmation {
+                Text("Copied")
+                    .font(.subheadline.weight(.medium))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(.thinMaterial, in: Capsule())
+                    .padding(.bottom, 32)
+                    .transition(.opacity)
+                    .accessibilityHidden(true)
             }
         }
     }
