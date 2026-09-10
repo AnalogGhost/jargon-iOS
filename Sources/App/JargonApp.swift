@@ -16,8 +16,9 @@ struct JargonApp: App {
     }
 
     /// `--screenshot-seed` (passed by the `fastlane snapshot` walkthrough) starts
-    /// the app from a deterministic state — a fixed pair of favorites — so the
-    /// favorites screenshots don't depend on whatever a previous run left behind.
+    /// the app from a deterministic state — a fixed pair of favorites, no recent
+    /// searches — in an isolated defaults suite, so the screenshots don't depend
+    /// on whatever a previous run left behind.
     private static func makeViewModel() -> JargonViewModel {
         guard ProcessInfo.processInfo.arguments.contains("--screenshot-seed") else {
             return JargonViewModel()
@@ -26,7 +27,10 @@ struct JargonApp: App {
         let defaults = UserDefaults(suiteName: suite) ?? .standard
         defaults.removePersistentDomain(forName: suite)
         defaults.set(["hacker", "geek"], forKey: "favorite_ids")
-        return JargonViewModel(favoritesRepository: FavoritesRepository(defaults: defaults))
+        return JargonViewModel(
+            favoritesRepository: FavoritesRepository(defaults: defaults),
+            searchHistoryRepository: SearchHistoryRepository(defaults: defaults)
+        )
     }
 
     var body: some Scene {

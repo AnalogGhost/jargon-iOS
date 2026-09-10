@@ -7,20 +7,24 @@ final class JargonViewModel: ObservableObject {
     @Published var searchQuery: String = ""
     @Published private(set) var showFavoritesOnly: Bool = false
     @Published private(set) var favoriteIds: Set<String> = []
+    @Published private(set) var recentSearches: [String] = []
     @Published private(set) var loadError: String?
 
     @Published private(set) var visibleEntries: [DictionaryEntry] = []
 
     private let repository: DictionaryRepository
     private let favoritesRepository: FavoritesRepository
+    private let searchHistoryRepository: SearchHistoryRepository
     private var cancellables: Set<AnyCancellable> = []
 
     init(
         repository: DictionaryRepository = DictionaryRepository(),
-        favoritesRepository: FavoritesRepository = FavoritesRepository()
+        favoritesRepository: FavoritesRepository = FavoritesRepository(),
+        searchHistoryRepository: SearchHistoryRepository = SearchHistoryRepository()
     ) {
         self.repository = repository
         self.favoritesRepository = favoritesRepository
+        self.searchHistoryRepository = searchHistoryRepository
 
         favoritesRepository.favoriteIds
             .receive(on: DispatchQueue.main)
@@ -28,6 +32,11 @@ final class JargonViewModel: ObservableObject {
                 self?.favoriteIds = ids
                 self?.recomputeVisibleEntries()
             }
+            .store(in: &cancellables)
+
+        searchHistoryRepository.recentSearches
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.recentSearches = $0 }
             .store(in: &cancellables)
 
         // Local search over ~2,300 entries is fast, but re-running it on every keystroke still
@@ -64,6 +73,21 @@ final class JargonViewModel: ObservableObject {
 
     func retryLoad() {
         loadEntries()
+    }
+
+    /// Records the current query in the recent-search history. Call on an explicit
+    /// search submit (keyboard "Search" key), not on every keystroke.
+    func commitSearch() {
+        searchHistoryRepository.record(searchQuery)
+    }
+
+    func selectRecentSearch(_ query: String) {
+        searchQuery = query
+        searchHistoryRepository.record(query)
+    }
+
+    func clearSearchHistory() {
+        searchHistoryRepository.clear()
     }
 
     func toggleShowFavoritesOnly() {
