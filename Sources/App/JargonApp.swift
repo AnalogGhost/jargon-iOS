@@ -18,9 +18,11 @@ struct JargonApp: App {
     }
 
     /// `--screenshot-seed` (passed by the `fastlane snapshot` walkthrough) starts
-    /// the app from a deterministic state — a fixed pair of favorites, no recent
+    /// the app from a deterministic state — a fixed set of favorites, no recent
     /// searches — in an isolated defaults suite, so the screenshots don't depend
-    /// on whatever a previous run left behind.
+    /// on whatever a previous run left behind. "hacker" is deliberately excluded:
+    /// the walkthrough favorites it live, so the 03/04 screenshots show a real
+    /// before/after instead of a no-op tap on an already-filled star.
     private static func makeViewModel() -> JargonViewModel {
         guard ProcessInfo.processInfo.arguments.contains("--screenshot-seed") else {
             return JargonViewModel()
@@ -28,7 +30,7 @@ struct JargonApp: App {
         let suite = "screenshot-seed"
         let defaults = UserDefaults(suiteName: suite) ?? .standard
         defaults.removePersistentDomain(forName: suite)
-        defaults.set(["hacker", "geek"], forKey: "favorite_ids")
+        defaults.set(["geek", "kludge", "wizard", "grok", "foo"], forKey: "favorite_ids")
         return JargonViewModel(
             favoritesRepository: FavoritesRepository(defaults: defaults),
             searchHistoryRepository: SearchHistoryRepository(defaults: defaults)

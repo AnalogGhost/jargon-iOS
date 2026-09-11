@@ -32,11 +32,9 @@ final class ScreenshotCapture: XCTestCase {
         XCTAssertTrue(app.navigationBars["hacker"].waitForExistence(timeout: 5))
         snapshot("03_detail")
 
-        // Seeded as a favorite, so the star is already filled. Fall back to
-        // tapping it if the seed somehow didn't land.
-        if app.navigationBars["hacker"].buttons["Add to favorites"].exists {
-            app.navigationBars["hacker"].buttons["Add to favorites"].tap()
-        }
+        // Not seeded as a favorite (see JargonApp.makeViewModel), so this is a
+        // real tap — 03/04 show an actual before/after, not the same frame twice.
+        app.navigationBars["hacker"].buttons["Add to favorites"].tap()
         XCTAssertTrue(app.navigationBars["hacker"].buttons["Remove from favorites"].waitForExistence(timeout: 5))
         snapshot("04_favorite")
 
@@ -45,11 +43,15 @@ final class ScreenshotCapture: XCTestCase {
         app.buttons["Clear search"].tap()
         XCTAssertTrue(app.staticTexts["0"].waitForExistence(timeout: 5))
 
+        // hacker (just favorited above) plus the seeded set — six entries, so
+        // the favorites list reads as a real collection rather than two rows
+        // adrift on a mostly empty screen (especially on the tall iPad canvas).
         let showFavoritesOnly = app.navigationBars["Jargon"].buttons["Show favorites only"]
         XCTAssertTrue(showFavoritesOnly.waitForExistence(timeout: 5))
         showFavoritesOnly.tap()
         XCTAssertTrue(app.staticTexts["hacker"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["geek"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["wizard"].waitForExistence(timeout: 5))
         snapshot("05_favorites")
 
         app.navigationBars["Jargon"].buttons["Show all entries"].tap()
