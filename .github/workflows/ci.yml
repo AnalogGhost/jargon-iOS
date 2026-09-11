@@ -18,17 +18,41 @@ jobs:
         with:
           xcode-version: latest-stable
 
+      # `latest-stable` can land on an Xcode the runner image only just added,
+      # before its matching iOS Simulator runtime is cached — xcodebuild then
+      # reports zero concrete simulator devices. This is a no-op if the runtime
+      # is already present.
+      - name: Ensure an iOS Simulator runtime is installed
+        run: xcodebuild -downloadPlatform iOS
+
       - name: Install XcodeGen
         run: brew install xcodegen
 
       - name: Generate Xcode project
         run: xcodegen generate
 
+      # A hardcoded device name (e.g. "iPhone 16") breaks once Apple's simulator
+      # lineup rotates it out. Pick whatever iPhone the newest installed iOS
+      # runtime offers instead.
+      - name: Pick a simulator destination
+        id: sim
+        run: |
+          name=$(xcrun simctl list devices available -j | jq -r '
+            .devices | to_entries
+            | map(select(.key | test("com.apple.CoreSimulator.SimRuntime.iOS")))
+            | sort_by(.key | capture("iOS-(?<maj>[0-9]+)-(?<min>[0-9]+)") | (.maj|tonumber)*100 + (.min|tonumber))
+            | last.value
+            | map(select(.name | test("^iPhone")))
+            | first.name
+          ')
+          echo "Using simulator: $name"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
       - name: Run unit + UI tests
         run: |
           xcodebuild \
             -scheme Jargon \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.name }}" \
             -retry-tests-on-failure \
             test
 
