@@ -32,6 +32,10 @@ Set your development team in Xcode under Signing & Capabilities, then build and 
 
 App Store releases are cut locally with fastlane. See [RELEASING.md](RELEASING.md).
 
+## Support
+
+Jargon is free, with no ads or tracking. If it's useful to you, you can [sponsor its development on GitHub](https://github.com/sponsors/AnalogGhost).
+
 ## License
 
 Copyright (C) 2026 Mathew Brown
