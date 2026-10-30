@@ -56,8 +56,10 @@ jobs:
             -retry-tests-on-failure \
             test
 
-      - name: Build screenshot composer
-        run: swift build --package-path Tools/ScreenshotComposer
+      - name: Check screenshot builder
+        run: |
+          python3 -m py_compile Tools/StoreScreenshots/build.py
+          python3 -m json.tool Tools/StoreScreenshots/captions.json > /dev/null
 
       - name: Upload test results
         if: failure()

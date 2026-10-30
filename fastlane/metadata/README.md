@@ -28,8 +28,8 @@ metadata/
 ## Locales
 
 English only. Add a sibling locale directory (same files as `en-US`, minus
-the URLs) plus a matching row in `../screenshot_captions.yml` when a
-translation exists.
+the URLs) plus matching slide copy in `Tools/StoreScreenshots/captions.json`
+when a translation exists.
 
 ## Category
 

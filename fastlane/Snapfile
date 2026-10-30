@@ -9,7 +9,7 @@ devices([
 ])
 
 # English only for now — add a locale here when a translated
-# fastlane/metadata/<locale> set and screenshot_captions.yml rows exist.
+# fastlane/metadata/<locale> set and Tools/StoreScreenshots/captions.json copy exist.
 languages([
   "en-US"
 ])

@@ -3,8 +3,8 @@ import XCTest
 /// App Store screenshot walkthrough, driven by `fastlane snapshot`
 /// (`bundle exec fastlane screenshots`). Launches with `--screenshot-seed` so
 /// "hacker" and "geek" start favorited (see JargonApp.makeViewModel), then
-/// captures one shot per key screen. Screen names match the keys in
-/// `fastlane/screenshot_captions.yml`.
+/// captures one shot per key screen. Screen names match the "main"/"back" keys in
+/// `Tools/StoreScreenshots/captions.json`.
 @MainActor
 final class ScreenshotCapture: XCTestCase {
     override func setUpWithError() throws {

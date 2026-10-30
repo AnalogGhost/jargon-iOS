@@ -81,13 +81,14 @@ will correct on the next metadata push).
    ```
 
    This captures raw shots for the 6.9" iPhone and 13" iPad into
-   `fastlane/screenshots/raw/` (via `snapshot`), then composites the
-   green-phosphor framed + captioned marketing set into
-   `fastlane/screenshots/framed/` (via `Tools/ScreenshotComposer`, a small
-   Swift/CoreGraphics program — a port of the Android app's composer). `deliver`
-   uploads the framed set. Edit the caption text in
-   `fastlane/screenshot_captions.yml` and re-run `bundle exec fastlane reframe`
-   to re-frame without re-capturing.
+   `fastlane/screenshots/raw/` (via `snapshot`), then composes the
+   captioned marketing set into `fastlane/screenshots/framed/` (via
+   `Tools/StoreScreenshots/build.py`, which lays each slide out as HTML and
+   renders it with headless Chrome — the same design as the Android app's Play
+   screenshots). `deliver` uploads the framed set. Edit the slide copy and
+   screen pairings in `Tools/StoreScreenshots/captions.json` and re-run
+   `bundle exec fastlane reframe` to re-compose without re-capturing. Needs
+   Google Chrome; set `CHROME` if it isn't in `/Applications`.
 
    (Or run the **Screenshots** GitHub Actions workflow and commit the artifact.)
 

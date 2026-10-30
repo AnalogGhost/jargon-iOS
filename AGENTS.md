@@ -15,8 +15,8 @@ project definition. The bundled dictionary is `Sources/jargon.json`. Generated
 - `xcodegen generate` regenerates `Jargon.xcodeproj` from `project.yml`.
 - `xcodebuild -scheme Jargon -destination 'platform=iOS Simulator,name=iPhone 16' test`
   runs the unit + functional UI tests (any installed iPhone simulator works).
-- `swift build --package-path Tools/ScreenshotComposer` builds the screenshot
-  compositor.
+- `python3 Tools/StoreScreenshots/build.py` re-composes the store screenshots
+  from the raw captures (needs Google Chrome).
 
 ## Coding and testing
 
@@ -42,5 +42,5 @@ Release automation is fastlane, run locally. Full procedure in `RELEASING.md`.
 - Never commit `*.p8` App Store Connect keys, `fastlane/.env.default`, or
   `.ipa`/`.xcarchive` build output.
 - `bundle exec fastlane screenshots` regenerates App Store screenshots
-  (`snapshot` walkthrough + `Tools/ScreenshotComposer`); the resulting PNGs
+  (`snapshot` walkthrough + `Tools/StoreScreenshots/build.py`); the resulting PNGs
   under `fastlane/screenshots/` are committed by hand, never by CI.
