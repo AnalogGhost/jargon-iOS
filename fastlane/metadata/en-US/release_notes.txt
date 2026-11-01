@@ -1,4 +1,4 @@
-* Share or copy any definition from the entry screen
-* Search now remembers your recent lookups
-* "Random entry" Home Screen quick action — long-press the app icon
-* Smoother search while you type
+* Word of the Day widget for the Home Screen and Lock Screen
+* Find any entry from Spotlight: search "kludge" from the Home Screen
+* Siri and Shortcuts: "Look up a term in Jargon", "Jargon word of the day", or a random entry
+* iPad: the list and the entry now sit side by side

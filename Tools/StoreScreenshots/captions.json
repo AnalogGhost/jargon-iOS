@@ -1,12 +1,13 @@
 {
-  "_comment": "App Store slide copy, shared by the iPhone and iPad sets. Headline lines are separated by |, and {braces} mark the accent. en-US only for now; add a locale here when the Snapfile and fastlane/metadata gain one.",
+  "_comment": "App Store slide copy, shared by the iPhone and iPad sets. Headline lines are separated by |, and {braces} mark the accent. en-US only for now; add a locale here when the Snapfile and fastlane/metadata gain one. A slide with \"devices\" is only built for those Snapfile devices.",
   "slides": [
     {"name": "01_dictionary", "main": "01_browse", "back": "03_detail"},
     {"name": "02_search", "main": "02_search", "back": "01_browse"},
     {"name": "03_crossref", "main": "03_detail", "back": "02_search"},
     {"name": "04_share", "main": "04_favorite", "back": "03_detail"},
     {"name": "05_favorites", "main": "05_favorites", "back": "04_favorite"},
-    {"name": "06_offline", "main": "06_about", "back": "01_browse"}
+    {"name": "06_widget", "main": "07_widget", "back": "03_detail", "devices": ["iPhone 16 Pro Max"]},
+    {"name": "07_offline", "main": "06_about", "back": "01_browse"}
   ],
   "copy": {
     "en-US": [
@@ -15,6 +16,7 @@
       ["Follow the|{rabbit hole.}", "Tap any cross-reference to jump straight to it."],
       ["Copy it.|{Share it.}", "Send any definition anywhere, or paste it into a chat."],
       ["Keep your|{favorites.}", "Star an entry and it's always one tap away."],
+      ["A new word|{every day.}", "Put the word of the day on your Home Screen or Lock Screen."],
       ["No network.|{Ever.}", "No accounts, no ads, no analytics. Nothing leaves your device."]
     ]
   }

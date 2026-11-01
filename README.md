@@ -10,6 +10,9 @@ A fully offline reader for the Jargon File — the hacker culture dictionary tha
 - Share or copy any definition
 - Favorite entries and filter down to just those
 - "Surprise me" with a random entry, or a "Random entry" Home Screen quick action
+- A "Word of the Day" widget for the Home Screen and Lock Screen
+- Every entry searchable from Spotlight; Siri and Shortcuts can look up a term, read the word of the day, or open a random entry
+- Side-by-side list and entry on iPad
 - Zero permissions, zero network access — the dictionary ships inside the app; nothing ever leaves the device
 
 ## Requirements

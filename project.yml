@@ -5,6 +5,13 @@ options:
     iOS: "17.0"
   xcodeVersion: "16"
 
+# Shared by the app and the widget extension, which App Store Connect requires to
+# carry the same version. The build number is overridden at archive time (Fastfile).
+settings:
+  base:
+    MARKETING_VERSION: "1.2.0"
+    CURRENT_PROJECT_VERSION: "1"
+
 targets:
   Jargon:
     type: application
@@ -39,6 +46,13 @@ targets:
           - UIApplicationShortcutItemType: com.hackerapps.jargon.random-entry
             UIApplicationShortcutItemTitle: Random entry
             UIApplicationShortcutItemIconSymbolName: shuffle
+        # jargon://entry/<id> — the widget's tap target (see EntryLink.swift).
+        CFBundleURLTypes:
+          - CFBundleURLName: com.hackerapps.jargon
+            CFBundleURLSchemes:
+              - jargon
+        # Spotlight's "Search in App" hands the query to the app's search field.
+        CoreSpotlightContinuation: true
     settings:
       base:
         PRODUCT_NAME: Jargon
@@ -52,13 +66,44 @@ targets:
         CODE_SIGN_STYLE: Automatic
         TARGETED_DEVICE_FAMILY: "1,2"
         IPHONEOS_DEPLOYMENT_TARGET: "17.0"
-        MARKETING_VERSION: "1.1.0"
-        CURRENT_PROJECT_VERSION: "1"
       configs:
         Debug:
           SWIFT_ENABLE_TESTABILITY: YES
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
           GCC_PREPROCESSOR_DEFINITIONS: "DEBUG=1 $(inherited)"
+    dependencies:
+      - target: JargonWidgets
+        embed: true
+
+  # Word-of-the-day widget. Compiles only the data files it needs and reads the
+  # dictionary from the containing app's bundle rather than shipping a second copy.
+  JargonWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widgets
+      - path: Sources/Data/DictionaryEntry.swift
+      - path: Sources/Data/DictionaryRepository.swift
+      - path: Sources/Data/WordOfTheDay.swift
+      - path: Sources/Data/EntryLink.swift
+    info:
+      path: Widgets/Info.plist
+      properties:
+        CFBundleDisplayName: Jargon
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_NAME: JargonWidgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.hackerapps.jargon.widgets
+        SWIFT_VERSION: "5.9"
+        DEVELOPMENT_TEAM: 6BRG6VVP3H
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1,2"
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        SKIP_INSTALL: YES
 
   JargonTests:
     type: bundle.unit-test
@@ -83,6 +128,9 @@ targets:
     settings:
       PRODUCT_NAME: JargonUITests
       SWIFT_VERSION: "5.9"
+      # Universal, so the runner sees the real idiom on iPad (the screenshot
+      # walkthrough branches on it) instead of running in iPhone compatibility mode.
+      TARGETED_DEVICE_FAMILY: "1,2"
       IPHONEOS_DEPLOYMENT_TARGET: "17.0"
       GENERATE_INFOPLIST_FILE: YES
       TEST_TARGET_NAME: Jargon
@@ -106,6 +154,7 @@ schemes:
         - name: JargonUITests
           skippedTests:
             - ScreenshotCapture
+            - HomeScreenCapture
 
   # Screenshot walkthrough. Driven by `fastlane snapshot`; kept out of the
   # default scheme so ordinary `xcodebuild test` runs stay fast.

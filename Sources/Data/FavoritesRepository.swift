@@ -3,13 +3,13 @@ import Combine
 
 final class FavoritesRepository {
     private let defaults: UserDefaults
-    private let favoriteIdsKey = "favorite_ids"
+    static let favoriteIdsKey = "favorite_ids"
 
     private let subject: CurrentValueSubject<Set<String>, Never>
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        let initial = Set(defaults.stringArray(forKey: favoriteIdsKey) ?? [])
+        let initial = Set(defaults.stringArray(forKey: Self.favoriteIdsKey) ?? [])
         self.subject = CurrentValueSubject(initial)
     }
 
@@ -24,7 +24,7 @@ final class FavoritesRepository {
         } else {
             current.insert(id)
         }
-        defaults.set(Array(current), forKey: favoriteIdsKey)
+        defaults.set(Array(current), forKey: Self.favoriteIdsKey)
         subject.send(current)
     }
 }

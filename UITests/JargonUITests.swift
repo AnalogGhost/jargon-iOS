@@ -119,6 +119,13 @@ final class JargonUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars.element(matching: leftList).waitForExistence(timeout: 10))
     }
 
+    func testWidgetLinkOpensThatEntry() {
+        let app = XCUIApplication()
+        app.launchArguments += ["--simulate-open-url", "jargon://entry/kludge"]
+        app.launch()
+        XCTAssertTrue(app.navigationBars["kludge"].waitForExistence(timeout: 10))
+    }
+
     func testTappingCrossReferenceNavigatesToTargetEntry() {
         let app = launchedApp()
         let search = app.textFields["Search"]

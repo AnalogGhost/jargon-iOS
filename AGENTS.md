@@ -3,7 +3,9 @@
 ## Project structure
 
 Jargon for iOS is a SwiftUI offline reader for the Jargon File, targeting
-iOS 17 and universal (iPhone + iPad). Source code is under `Sources/`, unit
+iOS 17 and universal (iPhone + iPad). Source code is under `Sources/` (App
+Intents for Siri/Shortcuts in `Sources/Intents/`), the "Word of the Day" widget
+extension is under `Widgets/` and compiles a few files from `Sources/Data/`, unit
 tests are under `Tests/`, UI tests (including the screenshot walkthrough) are
 under `UITests/`, App Store copy and screenshots are under `fastlane/metadata/`
 and `fastlane/screenshots/`, and `project.yml` is the canonical XcodeGen
@@ -21,6 +23,8 @@ project definition. The bundled dictionary is `Sources/jargon.json`. Generated
 ## Coding and testing
 
 - Preserve fully offline operation and the zero-permission, zero-network design.
+  The widget reads the containing app's bundled `jargon.json` and picks the
+  day's entry from the date alone, so it needs no App Group or shared storage.
 - Keep dictionary parsing and filtering in `Sources/Data/`, view models in
   `Sources/ViewModels/`, and SwiftUI presentation in `Sources/Views/`.
 - Add or update XCTest coverage for changes to parsing, filtering, favorites,

@@ -162,8 +162,11 @@ def main():
             # deliver uploads every PNG in the folder, so clear the previous set first.
             for old in out_dir.glob("*.png"):
                 old.unlink()
+            built = 0
             for device, layout in LAYOUTS.items():
                 for slide, (head, sub) in zip(captions["slides"], copy):
+                    if device not in slide.get("devices", [device]):
+                        continue
                     page = PAGE.format(lang=locale.split("-")[0], fonts=(HERE / "fonts").as_uri(),
                                        bg=BACKGROUND, ink=INK, accent=ACCENT, subline=SUBLINE,
                                        body=slide_body(locale, device, layout, slide, head, sub),
@@ -171,7 +174,8 @@ def main():
                     html_path = Path(tmp) / f"{locale}_{device}_{slide['name']}.html"
                     html_path.write_text(page, encoding="utf-8")
                     render(html_path, out_dir / f"{device}-{slide['name']}.png", layout)
-            print(f"{locale}: {len(copy)} slides x {len(LAYOUTS)} devices")
+                    built += 1
+            print(f"{locale}: {built} slides across {len(LAYOUTS)} devices")
 
 
 if __name__ == "__main__":

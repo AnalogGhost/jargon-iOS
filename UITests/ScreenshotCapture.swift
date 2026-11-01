@@ -1,10 +1,11 @@
 import XCTest
 
 /// App Store screenshot walkthrough, driven by `fastlane snapshot`
-/// (`bundle exec fastlane screenshots`). Launches with `--screenshot-seed` so
-/// "hacker" and "geek" start favorited (see JargonApp.makeViewModel), then
-/// captures one shot per key screen. Screen names match the "main"/"back" keys in
-/// `Tools/StoreScreenshots/captions.json`.
+/// (`bundle exec fastlane screenshots`). Launches with `--screenshot-seed` for a
+/// fixed set of favorites (see JargonApp.makeViewModel), then captures one shot
+/// per key screen. On iPad the list and entry share the screen (RootView's split
+/// layout), and 01_browse shows the word of the day beside the list. Screen names
+/// match the "main"/"back" keys in `Tools/StoreScreenshots/captions.json`.
 @MainActor
 final class ScreenshotCapture: XCTestCase {
     override func setUpWithError() throws {
@@ -16,6 +17,7 @@ final class ScreenshotCapture: XCTestCase {
         setupSnapshot(app)
         app.launchArguments += ["--screenshot-seed"]
         app.launch()
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
 
         let search = app.textFields["Search"]
         XCTAssertTrue(search.waitForExistence(timeout: 15))
@@ -38,24 +40,26 @@ final class ScreenshotCapture: XCTestCase {
         XCTAssertTrue(app.navigationBars["hacker"].buttons["Remove from favorites"].waitForExistence(timeout: 5))
         snapshot("04_favorite")
 
-        app.navigationBars["hacker"].buttons.firstMatch.tap() // back
-        XCTAssertTrue(app.navigationBars["Jargon"].waitForExistence(timeout: 5))
+        // On iPad the list stays in the sidebar beside the entry, so there's no back.
+        if !isPad {
+            app.navigationBars["hacker"].buttons.firstMatch.tap() // back
+        }
+        let jargonBar = app.navigationBars["Jargon"]
+        XCTAssertTrue(jargonBar.waitForExistence(timeout: 5))
         app.buttons["Clear search"].tap()
         XCTAssertTrue(app.staticTexts["0"].waitForExistence(timeout: 5))
 
-        // hacker (just favorited above) plus the seeded set — six entries, so
-        // the favorites list reads as a real collection rather than two rows
-        // adrift on a mostly empty screen (especially on the tall iPad canvas).
-        let showFavoritesOnly = app.navigationBars["Jargon"].buttons["Show favorites only"]
-        XCTAssertTrue(showFavoritesOnly.waitForExistence(timeout: 5))
-        showFavoritesOnly.tap()
+        // hacker (just favorited above) plus the seeded set — six entries, so the
+        // favorites list reads as a real collection rather than a few rows adrift on
+        // a mostly empty screen (especially on the tall iPad canvas).
+        jargonBar.buttons["Show favorites only"].tap()
         XCTAssertTrue(app.staticTexts["hacker"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["geek"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["wizard"].waitForExistence(timeout: 5))
         snapshot("05_favorites")
 
-        app.navigationBars["Jargon"].buttons["Show all entries"].tap()
-        app.navigationBars["Jargon"].buttons["About"].tap()
+        jargonBar.buttons["Show all entries"].tap()
+        jargonBar.buttons["About"].tap()
         XCTAssertTrue(app.navigationBars["About"].waitForExistence(timeout: 5))
         snapshot("06_about")
     }

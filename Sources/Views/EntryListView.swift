@@ -4,6 +4,8 @@ private let scrubberLetters: [Character] = ["#"] + Array("ABCDEFGHIJKLMNOPQRSTUV
 
 struct EntryListView: View {
     @ObservedObject var viewModel: JargonViewModel
+    /// The entry open in the iPad detail column, highlighted in the list. nil on iPhone.
+    var selectedId: String? = nil
     let onEntryTap: (DictionaryEntry) -> Void
     let onAboutTap: () -> Void
 
@@ -20,7 +22,7 @@ struct EntryListView: View {
         } else if viewModel.entries.isEmpty {
             ProgressView()
         } else {
-            EntryListBody(viewModel: viewModel, onEntryTap: onEntryTap)
+            EntryListBody(viewModel: viewModel, selectedId: selectedId, onEntryTap: onEntryTap)
         }
     }
 
@@ -70,6 +72,7 @@ private struct ErrorStateView: View {
 
 private struct EntryListBody: View {
     @ObservedObject var viewModel: JargonViewModel
+    let selectedId: String?
     let onEntryTap: (DictionaryEntry) -> Void
 
     @FocusState private var searchFieldFocused: Bool
@@ -122,6 +125,7 @@ private struct EntryListBody: View {
                 EntryListWithScrubber(
                     entries: viewModel.visibleEntries,
                     favoriteIds: viewModel.favoriteIds,
+                    selectedId: selectedId,
                     onEntryTap: onEntryTap
                 )
             }
@@ -172,6 +176,7 @@ private struct RecentSearchesRow: View {
 private struct EntryListWithScrubber: View {
     let entries: [DictionaryEntry]
     let favoriteIds: Set<String>
+    let selectedId: String?
     let onEntryTap: (DictionaryEntry) -> Void
 
     var body: some View {
@@ -181,6 +186,8 @@ private struct EntryListWithScrubber: View {
                     EntryRow(entry: entry, isFavorite: favoriteIds.contains(entry.id))
                         .contentShape(Rectangle())
                         .onTapGesture { onEntryTap(entry) }
+                        .listRowBackground(entry.id == selectedId ? Color.jargonPrimary.opacity(0.18) : nil)
+                        .accessibilityAddTraits(entry.id == selectedId ? .isSelected : [])
                         .id(entry.id)
                 }
                 .onChange(of: entries) { _, newEntries in

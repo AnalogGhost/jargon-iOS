@@ -51,6 +51,10 @@ end
 def build_release_ipa(api_key)
   build_number = next_build_number(api_key)
   UI.message("Building #{marketing_version} (#{build_number})")
+  # Signing goes through the Apple ID signed in to Xcode (Settings > Accounts), which
+  # creates the app and widget profiles and cloud-signs the export. The App Store
+  # Connect API key can't stand in: its App Manager role has no cloud signing, and gym
+  # reuses xcargs for the export step, so passing the key here breaks the export.
   build_app(
     scheme: SCHEME,
     project: PROJECT,

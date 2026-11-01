@@ -6,15 +6,24 @@ enum RandomEntryShortcut {
     static let type = "com.hackerapps.jargon.random-entry"
 }
 
-/// Bridges Home Screen quick actions (UIKit) into SwiftUI. `JargonApp` observes
-/// `pendingRandomEntry` and, once the dictionary has loaded, navigates to a
-/// random entry and clears the flag. Mirrors the Android app's "Random entry"
+/// Where the app should go next because something outside the view hierarchy asked:
+/// a Home Screen quick action, a widget tap, a Spotlight result, or an App Intent.
+enum LaunchTarget: Equatable {
+    case randomEntry
+    case entry(String)
+    case search(String)
+}
+
+/// Bridges launch requests from UIKit, WidgetKit, Core Spotlight and App Intents into
+/// SwiftUI. `JargonApp` observes `pending` and, once the dictionary has loaded,
+/// navigates and clears it. The quick action mirrors the Android app's "Random entry"
 /// launcher shortcut.
-final class QuickActions: ObservableObject {
-    static let shared = QuickActions()
+@MainActor
+final class PendingLaunch: ObservableObject {
+    static let shared = PendingLaunch()
     private init() {}
 
-    @Published var pendingRandomEntry = false
+    @Published var pending: LaunchTarget?
 }
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
@@ -27,10 +36,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             handle(item)
         }
         #if DEBUG
-        // Home Screen quick actions can't be driven from XCUITest, so the UI test
-        // for the navigation path simulates the pending flag with a launch argument.
-        if ProcessInfo.processInfo.arguments.contains("--simulate-random-entry-shortcut") {
-            QuickActions.shared.pendingRandomEntry = true
+        // Home Screen quick actions, widgets and Spotlight can't be driven from XCUITest,
+        // so the UI tests simulate the pending launch with launch arguments.
+        let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("--simulate-random-entry-shortcut") {
+            PendingLaunch.shared.pending = .randomEntry
+        }
+        if let index = arguments.firstIndex(of: "--simulate-open-url"), index + 1 < arguments.count,
+           let url = URL(string: arguments[index + 1]), let id = EntryLink.entryId(from: url) {
+            PendingLaunch.shared.pending = .entry(id)
         }
         #endif
         return true
@@ -47,7 +61,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     @discardableResult
     private func handle(_ item: UIApplicationShortcutItem) -> Bool {
         guard item.type == RandomEntryShortcut.type else { return false }
-        QuickActions.shared.pendingRandomEntry = true
+        PendingLaunch.shared.pending = .randomEntry
         return true
     }
 }

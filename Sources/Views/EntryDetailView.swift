@@ -4,7 +4,6 @@ import UIKit
 struct EntryDetailView: View {
     @ObservedObject var viewModel: JargonViewModel
     let entry: DictionaryEntry
-    let onTermTap: (String) -> Void
 
     @State private var showCopiedConfirmation = false
 
@@ -47,11 +46,6 @@ struct EntryDetailView: View {
         }
         .navigationTitle(entry.term)
         .navigationBarTitleDisplayMode(.inline)
-        .environment(\.openURL, OpenURLAction { url in
-            guard let term = linkedTextTerm(from: url) else { return .systemAction }
-            onTermTap(term)
-            return .handled
-        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 ShareLink(item: entry.shareText) {

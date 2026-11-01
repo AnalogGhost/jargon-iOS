@@ -32,5 +32,5 @@ override_status_bar(true)
 stop_after_first_error(false)
 number_of_retries(2)
 
-# The screenshot walkthrough is the only test we want captured.
-only_testing(["JargonUITests/ScreenshotCapture"])
+# The in-app walkthrough plus the Home Screen widget shot (iPhone only; skipped on iPad).
+only_testing(["JargonUITests/ScreenshotCapture", "JargonUITests/HomeScreenCapture"])

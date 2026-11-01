@@ -12,6 +12,9 @@ Over 2,300 entries, all bundled in the app:
 * Share or copy any definition
 * Favorite entries for quick access later
 * "Surprise me" with a random entry — or long-press the app icon for one
+* A Word of the Day widget for the Home Screen and Lock Screen
+* Find entries straight from Spotlight, or ask Siri to look up a term
+* On iPad, browse the list and read entries side by side
 
 Zero permissions. Zero network access, ever — the dictionary ships inside
 the app, favorites stay on your device, nothing is ever sent anywhere.
