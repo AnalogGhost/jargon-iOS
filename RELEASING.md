@@ -126,10 +126,10 @@ will correct on the next metadata push).
 | `screenshots` | Capture raw screenshots (`snapshot`) + composite the framed/captioned set. No upload. | — |
 | `reframe` | Re-run only the framing step over the existing raw screenshots. | — |
 | `store` | Build a signed app-store IPA and upload the build + metadata. | **dry run** (`verify_only:true`) |
-| `metadata` | Upload only the listing text, URLs, and release notes. No build. | **dry run** |
-| `upload_screenshots` | Upload only the screenshots. No build. | **dry run** |
+| `metadata` | Upload only the listing text, URLs, and release notes. No build. | **dry run** (lists the files it would upload) |
+| `upload_screenshots` | Upload only the screenshots. No build. | **dry run** (lists the files it would upload) |
 | `beta` | Build and upload to TestFlight only (beta description from `fastlane/metadata/en-US/beta_app_description.txt`). | — |
-| `release` | Tag `v<version>` and create the GitHub release, behind a confirm prompt. | — |
+| `release` | Tag `v<version>` and create the GitHub release, behind a confirm prompt (`yes:true` skips it). | — |
 
 Common options: `verify_only:false` (actually upload), `submit:true` (submit for
 review), `skip_screenshots:false`, `skip_metadata:true`.
@@ -137,8 +137,9 @@ review), `skip_screenshots:false`, `skip_metadata:true`.
 ## Signing
 
 `build_app` uses Xcode-managed automatic signing with `-allowProvisioningUpdates`
-plus the App Store Connect API key, so no certificates or profiles are stored in
-the repo (no `match`). The first run on a new machine may pause while Apple
+through the Apple ID signed in to Xcode (Settings > Accounts), so no certificates
+or profiles are stored in the repo (no `match`). The App Store Connect API key is
+used for uploads only: its App Manager role can't cloud-sign the export. The first run on a new machine may pause while Apple
 registers the distribution profile.
 
 ## What must never be committed
