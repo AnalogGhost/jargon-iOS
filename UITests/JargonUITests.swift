@@ -78,7 +78,10 @@ final class JargonUITests: XCTestCase {
         let expectedLabelAfterTap = wasAlreadyFavorite ? "Add to favorites" : "Remove from favorites"
         XCTAssertTrue(app.navigationBars["hacker"].buttons[expectedLabelAfterTap].waitForExistence(timeout: 5))
 
-        app.navigationBars["hacker"].buttons.firstMatch.tap() // back
+        // On iPad the list is already beside the entry, and the bar's first button is the star.
+        if !isPad {
+            app.navigationBars["hacker"].buttons.firstMatch.tap() // back
+        }
         XCTAssertTrue(app.navigationBars["Jargon"].waitForExistence(timeout: 5))
 
         if !wasAlreadyFavorite {
@@ -97,8 +100,74 @@ final class JargonUITests: XCTestCase {
         app.navigationBars["Jargon"].buttons["About"].tap()
         XCTAssertTrue(app.navigationBars["About"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["App license"].waitForExistence(timeout: 5))
+        if isPad {
+            // About fills the detail column beside the list, so there's no back to tap.
+            XCTAssertTrue(app.navigationBars["Jargon"].exists)
+            return
+        }
         app.navigationBars["About"].buttons.firstMatch.tap() // back
         XCTAssertTrue(app.navigationBars["Jargon"].waitForExistence(timeout: 5))
+    }
+
+    // MARK: - iPad split view
+
+    private var isPad: Bool { UIDevice.current.userInterfaceIdiom == .pad }
+
+    func testSplitViewShowsWordOfTheDayBesideTheList() throws {
+        try XCTSkipUnless(isPad, "The split view is iPad-only")
+        let app = launchedApp()
+        XCTAssertTrue(app.navigationBars["Jargon"].waitForExistence(timeout: 10))
+        let openEntry = app.buttons["Open entry"]
+        XCTAssertTrue(openEntry.waitForExistence(timeout: 5))
+        openEntry.tap()
+        // The word of the day opens as a regular entry, so the button goes away.
+        let entryBar = NSPredicate(format: "identifier != %@", "Jargon")
+        XCTAssertTrue(app.navigationBars.element(matching: entryBar).waitForExistence(timeout: 5))
+        XCTAssertFalse(openEntry.exists)
+    }
+
+    func testSplitViewKeepsTheListBesideTheOpenEntry() throws {
+        try XCTSkipUnless(isPad, "The split view is iPad-only")
+        let app = launchedApp()
+        let search = app.textFields["Search"]
+        XCTAssertTrue(search.waitForExistence(timeout: 10))
+        search.tap()
+        search.typeText("hacker")
+        let cell = app.staticTexts["hacker"]
+        XCTAssertTrue(cell.waitForExistence(timeout: 5))
+        cell.tap()
+
+        XCTAssertTrue(app.navigationBars["hacker"].waitForExistence(timeout: 5))
+        // The list stays put, and picking another entry replaces the detail.
+        XCTAssertTrue(app.navigationBars["Jargon"].exists)
+        XCTAssertFalse(app.buttons["Open entry"].exists)
+        app.buttons["Clear search"].tap()
+        search.tap()
+        search.typeText("kludge")
+        let kludge = app.staticTexts["kludge"]
+        XCTAssertTrue(kludge.waitForExistence(timeout: 5))
+        kludge.tap()
+        XCTAssertTrue(app.navigationBars["kludge"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.navigationBars["hacker"].exists)
+    }
+
+    func testSplitViewCrossReferencePushesInTheDetailColumn() throws {
+        try XCTSkipUnless(isPad, "The split view is iPad-only")
+        let app = XCUIApplication()
+        app.launchArguments += ["--simulate-open-url", "jargon://entry/AFJ"]
+        app.launch()
+        XCTAssertTrue(app.navigationBars["AFJ"].waitForExistence(timeout: 10))
+
+        let seeAlso = app.staticTexts.containing(NSPredicate(format: "label BEGINSWITH %@", "See also")).firstMatch
+        XCTAssertTrue(seeAlso.waitForExistence(timeout: 5))
+        seeAlso.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5)).tap()
+
+        let kremvax = app.navigationBars["kremvax"]
+        XCTAssertTrue(kremvax.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["Jargon"].exists)
+        // Back in the detail column returns to the entry the link came from.
+        kremvax.buttons.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["AFJ"].waitForExistence(timeout: 5))
     }
 
     func testShuffleOpensSomeEntryDetail() {
